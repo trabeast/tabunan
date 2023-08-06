@@ -13,13 +13,13 @@ import { Button } from '@/components/ui/button';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 
-export interface HutProps extends GalleryProps {
+export interface CabinProps extends GalleryProps {
   id: string;
   name: string;
   description: string;
 }
 
-export default function Hut({ id, name, description, images }: HutProps) {
+export default function Cabin({ id, name, description, images }: CabinProps) {
   const router = useRouter();
 
   return (

@@ -40,27 +40,33 @@ function ChevronButton({ variant }: ChevronButtonProps) {
 }
 
 export interface GalleryProps {
-  images: {
+  images?: {
     id: string;
     src: string;
     alt: string;
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
   }[];
 }
 
 export default function Gallery({ images }: GalleryProps) {
   return (
     <div className={'relative'}>
-      <ChevronButton variant={'left'} />
-      <ChevronButton variant={'right'} />
-      {images.map((image) => {
-        return (
-          <AspectRatio key={image.id} ratio={16 / 9}>
-            <Image src={image.src} alt={image.alt} fill></Image>
-          </AspectRatio>
-        );
-      })}
+      {images ? (
+        <>
+          {images.map((image) => {
+            return (
+              <AspectRatio key={image.id} ratio={16 / 9}>
+                <Image src={image.src} alt={image.alt} fill></Image>
+              </AspectRatio>
+            );
+          })}
+          <ChevronButton variant={'left'} />
+          <ChevronButton variant={'right'} />
+        </>
+      ) : (
+        <i>No images</i>
+      )}
     </div>
   );
 }
