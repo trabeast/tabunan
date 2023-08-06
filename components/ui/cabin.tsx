@@ -7,9 +7,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import Gallery, { GalleryProps } from '@/components/ui/gallery';
-import { Button } from '@/components/ui/button';
+} from './card';
+import Gallery, { GalleryProps } from './gallery';
+import { Button } from './button';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 

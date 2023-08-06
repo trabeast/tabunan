@@ -1,4 +1,4 @@
-import { GalleryProps } from '@/components/ui/gallery';
+import { GalleryProps } from './gallery';
 
 export interface BookProps extends GalleryProps {
   name: string;

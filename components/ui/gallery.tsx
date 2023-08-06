@@ -1,10 +1,10 @@
-import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { AspectRatio } from './aspect-ratio';
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
+import { Button } from './button';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { cva, VariantProps } from 'class-variance-authority';
-import { cn } from '@/lib/utils';
 import React from 'react';
+import { cn } from '@/lib/utils';
 
 const buttonVariants = cva('absolute z-10 top-1/2', {
   variants: {

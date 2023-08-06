@@ -1,7 +1,7 @@
 import React from 'react';
-import Cabin from '@/components/ui/cabin';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
+import Cabin from '@/components/ui/cabin';
 
 export default async function Home() {
   const supabase = createServerComponentClient({ cookies });
