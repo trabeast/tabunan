@@ -1,11 +1,8 @@
 import React from 'react';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import Cabin from '@/components/ui/cabin';
+import supabase from '@/api/supabase';
 
 export default async function Home() {
-  const supabase = createServerComponentClient({ cookies });
-
   const { data: cabins } = await supabase.from('cabins').select('*');
 
   return (
