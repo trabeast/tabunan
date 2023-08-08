@@ -1,6 +1,6 @@
 import { graphql } from '@/gql';
 
-export const cabinsQuery = graphql(`
+export const cabinsCollectionQuery = graphql(`
   query Cabins {
     cabinsCollection {
       edges {
@@ -12,7 +12,8 @@ export const cabinsQuery = graphql(`
             edges {
               node {
                 id
-                source
+                src
+                alt
               }
             }
           }

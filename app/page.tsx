@@ -1,9 +1,29 @@
 import React from 'react';
 import Cabin from '@/components/ui/cabin';
-import supabase from '@/api/supabase';
+import client from '@/api/apollo-client';
+import { cabinsCollectionQuery } from '@/lib/queries/cabins';
 
 export default async function Home() {
-  const { data: cabins } = await supabase.from('cabins').select('*');
+  const { data } = await client.query({
+    query: cabinsCollectionQuery,
+  });
+
+  const cabins = data.cabinsCollection?.edges.map((cabin) => {
+    return {
+      id: cabin.node.id,
+      name: cabin.node.name,
+      description: cabin.node.description,
+      images: cabin.node.cabin_imagesCollection?.edges.map((imageEdge) => {
+        return {
+          id: imageEdge.node.id,
+          src: imageEdge.node.src ?? '',
+          alt: imageEdge.node.alt ?? '',
+          width: 0,
+          height: 0,
+        };
+      }),
+    };
+  });
 
   return (
     <div className={'flex justify-center'}>

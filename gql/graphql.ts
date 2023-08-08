@@ -330,13 +330,14 @@ export type UuidFilter = {
 
 export type Cabin_Images = Node & {
   __typename?: 'cabin_images';
+  alt?: Maybe<Scalars['String']['output']>;
   cabin_id: Scalars['BigInt']['output'];
   cabins: Cabins;
   created_at: Scalars['Datetime']['output'];
   id: Scalars['BigInt']['output'];
   /** Globally Unique Record Identifier */
   nodeId: Scalars['ID']['output'];
-  source: Scalars['String']['output'];
+  src: Scalars['String']['output'];
   updated_at: Scalars['Datetime']['output'];
 };
 
@@ -361,18 +362,20 @@ export type Cabin_ImagesEdge = {
 };
 
 export type Cabin_ImagesFilter = {
+  alt?: InputMaybe<StringFilter>;
   cabin_id?: InputMaybe<BigIntFilter>;
   created_at?: InputMaybe<DatetimeFilter>;
   id?: InputMaybe<BigIntFilter>;
   nodeId?: InputMaybe<IdFilter>;
-  source?: InputMaybe<StringFilter>;
+  src?: InputMaybe<StringFilter>;
   updated_at?: InputMaybe<DatetimeFilter>;
 };
 
 export type Cabin_ImagesInsertInput = {
+  alt?: InputMaybe<Scalars['String']['input']>;
   cabin_id?: InputMaybe<Scalars['BigInt']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
-  source?: InputMaybe<Scalars['String']['input']>;
+  src?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -385,17 +388,19 @@ export type Cabin_ImagesInsertResponse = {
 };
 
 export type Cabin_ImagesOrderBy = {
+  alt?: InputMaybe<OrderByDirection>;
   cabin_id?: InputMaybe<OrderByDirection>;
   created_at?: InputMaybe<OrderByDirection>;
   id?: InputMaybe<OrderByDirection>;
-  source?: InputMaybe<OrderByDirection>;
+  src?: InputMaybe<OrderByDirection>;
   updated_at?: InputMaybe<OrderByDirection>;
 };
 
 export type Cabin_ImagesUpdateInput = {
+  alt?: InputMaybe<Scalars['String']['input']>;
   cabin_id?: InputMaybe<Scalars['BigInt']['input']>;
   created_at?: InputMaybe<Scalars['Datetime']['input']>;
-  source?: InputMaybe<Scalars['String']['input']>;
+  src?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['Datetime']['input']>;
 };
 
@@ -589,7 +594,7 @@ export type ReservationsUpdateResponse = {
 export type CabinsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CabinsQuery = { __typename?: 'Query', cabinsCollection?: { __typename?: 'cabinsConnection', edges: Array<{ __typename?: 'cabinsEdge', node: { __typename?: 'cabins', id: any, name: string, description: string, cabin_imagesCollection?: { __typename?: 'cabin_imagesConnection', edges: Array<{ __typename?: 'cabin_imagesEdge', node: { __typename?: 'cabin_images', id: any, source: string } }> } | null } }> } | null };
+export type CabinsQuery = { __typename?: 'Query', cabinsCollection?: { __typename?: 'cabinsConnection', edges: Array<{ __typename?: 'cabinsEdge', node: { __typename?: 'cabins', id: any, name: string, description: string, cabin_imagesCollection?: { __typename?: 'cabin_imagesConnection', edges: Array<{ __typename?: 'cabin_imagesEdge', node: { __typename?: 'cabin_images', id: any, src: string, alt?: string | null } }> } | null } }> } | null };
 
 
-export const CabinsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Cabins"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cabinsCollection"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"cabin_imagesCollection"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"source"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<CabinsQuery, CabinsQueryVariables>;
+export const CabinsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Cabins"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cabinsCollection"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"cabin_imagesCollection"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"src"}},{"kind":"Field","name":{"kind":"Name","value":"alt"}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<CabinsQuery, CabinsQueryVariables>;

@@ -42,8 +42,7 @@
     "@graphql-codegen/cli": "5.0.0",
     "@graphql-codegen/client-preset": "4.1.0",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
-    "eslint-plugin-prettier": "^5.0.0",
-    "prettier": "^3.0.0",
+    "prettier": "^2.8.8",
     "typescript": "^5.1.6"
   }
 }
