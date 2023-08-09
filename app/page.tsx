@@ -1,47 +1,14 @@
 import React from 'react';
-import Cabin from '@/components/ui/cabin';
 import client from '@/api/apollo-client';
-import { cabinsCollectionQuery } from '@/lib/queries/cabins';
+import CabinList from '@/components/ui/cabin-list';
+import cabinsQuery, { CabinsQueryDto } from '@/lib/queries/cabins-query';
 
 export default async function Home() {
   const { data } = await client.query({
-    query: cabinsCollectionQuery,
+    query: cabinsQuery,
   });
 
-  const cabins = data.cabinsCollection?.edges.map((cabin) => {
-    return {
-      id: cabin.node.id,
-      name: cabin.node.name,
-      description: cabin.node.description,
-      images: cabin.node.cabin_imagesCollection?.edges.map((imageEdge) => {
-        return {
-          id: imageEdge.node.id,
-          src: imageEdge.node.src ?? '',
-          alt: imageEdge.node.alt ?? '',
-          width: 0,
-          height: 0,
-        };
-      }),
-    };
-  });
+  const cabins = CabinsQueryDto(data);
 
-  return (
-    <div className={'flex justify-center'}>
-      <div
-        className={'grid lg:grid-cols-2 sm:grid-cols-1 gap-5 content-center'}
-      >
-        {cabins!.map((cabin) => {
-          return (
-            <Cabin
-              key={cabin.id}
-              id={cabin.id}
-              name={cabin.name}
-              description={cabin.description}
-              images={cabin.images}
-            ></Cabin>
-          );
-        })}
-      </div>
-    </div>
-  );
+  return <CabinList cabins={cabins} />;
 }

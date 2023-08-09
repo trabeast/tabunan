@@ -13,6 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  query CabinReservation($id: BigInt!) {\n    cabinsCollection(filter: { id: { eq: $id } }) {\n      edges {\n        node {\n          id\n          name\n          description\n          reservationsCollection {\n            edges {\n              node {\n                id\n                during\n              }\n            }\n          }\n          cabin_imagesCollection {\n            edges {\n              node {\n                id\n                src\n                alt\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n": types.CabinReservationDocument,
     "\n  query Cabins {\n    cabinsCollection {\n      edges {\n        node {\n          id\n          name\n          description\n          cabin_imagesCollection {\n            edges {\n              node {\n                id\n                src\n                alt\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n": types.CabinsDocument,
 };
 
@@ -30,6 +31,10 @@ const documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query CabinReservation($id: BigInt!) {\n    cabinsCollection(filter: { id: { eq: $id } }) {\n      edges {\n        node {\n          id\n          name\n          description\n          reservationsCollection {\n            edges {\n              node {\n                id\n                during\n              }\n            }\n          }\n          cabin_imagesCollection {\n            edges {\n              node {\n                id\n                src\n                alt\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  query CabinReservation($id: BigInt!) {\n    cabinsCollection(filter: { id: { eq: $id } }) {\n      edges {\n        node {\n          id\n          name\n          description\n          reservationsCollection {\n            edges {\n              node {\n                id\n                during\n              }\n            }\n          }\n          cabin_imagesCollection {\n            edges {\n              node {\n                id\n                src\n                alt\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
