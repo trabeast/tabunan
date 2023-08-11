@@ -8,18 +8,18 @@ import {
   CardHeader,
   CardTitle,
 } from './card';
-import Gallery, { GalleryProps } from './gallery';
+import Gallery from './gallery';
 import { Button } from './button';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { CabinProps, GalleryProps } from '@/app/types';
 
-export interface CabinProps extends GalleryProps {
-  id: string;
-  name: string;
-  description: string;
-}
-
-export default function Cabin({ id, name, description, images }: CabinProps) {
+export default function Cabin({
+  id,
+  name,
+  description,
+  images,
+}: CabinProps & GalleryProps) {
   const router = useRouter();
 
   return (

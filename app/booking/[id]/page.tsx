@@ -1,19 +1,7 @@
-import client from '@/api/apollo-client';
-import { CabinProps } from '@/components/ui/cabin';
-import { DateRange } from 'react-day-picker';
-import cabinReservationQuery, {
-  CabinReservationQueryDto,
-} from '@/lib/queries/cabin-reservation-query';
+import { queryCabinWithImagesAndReservations } from '@/api/database';
 
 interface BookingProps {
   id: number;
-}
-
-export interface CabinReservation extends CabinProps {
-  reservations: {
-    id: string;
-    during: DateRange;
-  }[];
 }
 
 export default async function Page({
@@ -21,12 +9,7 @@ export default async function Page({
 }: {
   params: BookingProps;
 }) {
-  const { data } = await client.query({
-    query: cabinReservationQuery,
-    variables: { id },
-  });
-
-  const cabinReservation = CabinReservationQueryDto(data);
+  const cabinReservation = await queryCabinWithImagesAndReservations(id);
 
   return (
     <div>

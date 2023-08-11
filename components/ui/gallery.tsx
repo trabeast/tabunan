@@ -5,6 +5,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { cva, VariantProps } from 'class-variance-authority';
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { GalleryProps } from '@/app/types';
 
 const buttonVariants = cva('absolute z-10 top-1/2', {
   variants: {
@@ -37,16 +38,6 @@ function ChevronButton({ variant }: ChevronButtonProps) {
       )}
     </Button>
   );
-}
-
-export interface GalleryProps {
-  images?: {
-    id: string;
-    src: string;
-    alt: string;
-    width?: number;
-    height?: number;
-  }[];
 }
 
 export default function Gallery({ images }: GalleryProps) {

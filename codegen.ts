@@ -11,7 +11,7 @@ const config: CodegenConfig = {
   },
   documents: 'lib/queries/**/*.ts',
   generates: {
-    'gql/': {
+    'lib/queries/gql/': {
       preset: 'client',
       plugins: [],
     },

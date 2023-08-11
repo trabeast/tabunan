@@ -1,14 +1,8 @@
 import React from 'react';
-import client from '@/api/apollo-client';
 import CabinList from '@/components/ui/cabin-list';
-import cabinsQuery, { CabinsQueryDto } from '@/lib/queries/cabins-query';
+import { queryCabinsWithImages } from '@/api/database';
 
 export default async function Home() {
-  const { data } = await client.query({
-    query: cabinsQuery,
-  });
-
-  const cabins = CabinsQueryDto(data);
-
+  const cabins = await queryCabinsWithImages();
   return <CabinList cabins={cabins} />;
 }

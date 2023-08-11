@@ -1,10 +1,11 @@
 'use client';
 
-import Cabin, { CabinProps } from '@/components/ui/cabin';
+import Cabin from '@/components/ui/cabin';
 import React from 'react';
+import { CabinProps, GalleryProps } from '@/app/types';
 
 interface CabinListProps {
-  cabins: CabinProps[];
+  cabins: (CabinProps & GalleryProps)[];
 }
 
 export default function CabinList({ cabins }: CabinListProps) {
