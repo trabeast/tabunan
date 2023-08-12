@@ -43,7 +43,7 @@ function ChevronButton({ variant }: ChevronButtonProps) {
 export default function Gallery({ images }: GalleryProps) {
   return (
     <div className={'relative'}>
-      {images ? (
+      {images && images.length > 0 ? (
         <>
           {images.map((image) => {
             return (
@@ -52,8 +52,12 @@ export default function Gallery({ images }: GalleryProps) {
               </AspectRatio>
             );
           })}
-          <ChevronButton variant={'left'} />
-          <ChevronButton variant={'right'} />
+          {images.length > 1 && (
+            <>
+              <ChevronButton variant={'left'} />
+              <ChevronButton variant={'right'} />
+            </>
+          )}
         </>
       ) : (
         <i>No images</i>

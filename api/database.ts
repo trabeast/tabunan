@@ -1,8 +1,9 @@
+import 'server-only';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import cabinsQuery from '@/lib/queries/cabins-query';
 import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';
-import cabinReservationQuery from '@/lib/queries/cabin-reservation-query';
-import { cabinsDto } from '@/lib/utils';
+import { cabinsDto, reservationsDto } from '@/lib/utils';
+import reservationQuery from '@/lib/queries/reservation-query';
 
 const client = new ApolloClient({
   uri: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/graphql/v1?apikey=${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
@@ -19,14 +20,18 @@ export function queryCabinsWithImages(): Promise<
   );
 }
 
-export function queryCabinWithImagesAndReservations(
-  id: number,
-): Promise<CabinProps & GalleryProps & ReservationProps> {
+export function queryReservationsByCabinId(
+  cabinId: number,
+): Promise<ReservationProps> {
   return Promise.resolve(
     client
-      .query({ query: cabinReservationQuery, variables: { id } })
+      .query({
+        query: reservationQuery,
+        variables: { cabin_id: cabinId },
+        fetchPolicy: 'no-cache',
+      })
       .then(({ data }) => {
-        return cabinsDto(data.cabinsCollection!)[0];
+        return { reservations: reservationsDto(data.reservationsCollection!) };
       }),
   );
 }
