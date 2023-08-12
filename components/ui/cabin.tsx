@@ -10,11 +10,12 @@ import {
 } from './card';
 import Gallery from './gallery';
 import { Button } from './button';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';
 import Book from '@/components/ui/book';
 import { Reservation } from '@/components/ui/reservation';
 import { queryReservationsByCabinId } from '@/api/database';
+import { BookContext } from '@/app/contexts';
 
 export default function Cabin({
   id,
@@ -27,6 +28,8 @@ export default function Cabin({
     reservations: [],
   });
 
+  const bookContext = useMemo(() => ({ book: book, setBook: setBook }), [book]);
+
   useEffect(() => {
     book
       ? (async () => {
@@ -37,7 +40,7 @@ export default function Cabin({
   }, [book]);
 
   return (
-    <>
+    <BookContext.Provider value={bookContext}>
       <Card className={'lg:w-[500px] sm:w-[100%] sm:mx-5'}>
         <CardHeader>
           <CardTitle>{name}</CardTitle>
@@ -50,23 +53,11 @@ export default function Cabin({
           <Button onClick={() => setBook(true)}>Book</Button>
         </CardFooter>
       </Card>
-      {book && (
-        <Book
-          id={id}
-          name={name}
-          description={description}
-          images={images}
-          book={book}
-          setBook={setBook}
-        >
-          {children}
-        </Book>
-      )}
-    </>
       <Book id={id} name={name} description={description} images={images}>
         {reservations?.length! > 0 && (
           <Reservation id={id} reservations={reservations} />
         )}
       </Book>
+    </BookContext.Provider>
   );
 }
