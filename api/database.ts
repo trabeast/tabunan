@@ -1,4 +1,3 @@
-import 'server-only';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import cabinsQuery from '@/lib/queries/cabins-query';
 import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';

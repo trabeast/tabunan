@@ -1,7 +1,6 @@
 import Cabin from '@/components/ui/cabin';
 import React from 'react';
 import { queryCabinsWithImages } from '@/api/database';
-import { Reservation } from '@/components/ui/reservation';
 
 export default async function CabinList() {
   const cabins = await queryCabinsWithImages();
@@ -19,9 +18,7 @@ export default async function CabinList() {
               name={name}
               description={description}
               images={images}
-            >
-              <Reservation id={id} />
-            </Cabin>
+            />
           );
         })}
       </div>

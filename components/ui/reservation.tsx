@@ -1,10 +1,12 @@
-import { CabinProps } from '@/app/types';
+'use client';
+
 import React from 'react';
-import { queryReservationsByCabinId } from '@/api/database';
+import { CabinProps, ReservationProps } from '@/app/types';
 
-export async function Reservation({ id }: Pick<CabinProps, 'id'>) {
-  const { reservations } = await queryReservationsByCabinId(id);
-
+export function Reservation({
+  id,
+  reservations,
+}: Pick<CabinProps, 'id'> & ReservationProps) {
   return (
     <>
       <div>Reservation {id}</div>

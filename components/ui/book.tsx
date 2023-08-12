@@ -1,7 +1,7 @@
 'use client';
 
 import { CabinProps, GalleryProps } from '@/app/types';
-import React from 'react';
+import { ReactNode, useContext } from 'react';
 import { Button } from '@/components/ui/button';
 
 export default function Book({
@@ -14,12 +14,10 @@ export default function Book({
   setBook,
 }: CabinProps &
   GalleryProps & {
-    children: React.ReactNode;
-    book: boolean;
-    setBook: React.Dispatch<React.SetStateAction<boolean>>;
+    children: ReactNode;
   }) {
   return (
-    <dialog className={'border rounded-md w-[80%] h-[80%]'} open={book}>
+    <dialog className={'z-50 border rounded-md w-[80%] h-[80%]'} open={book}>
       <article>
         <section>
           <h1>{name}</h1>
