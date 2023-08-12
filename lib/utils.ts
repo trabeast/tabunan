@@ -11,9 +11,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function imagesDto(
-  images: PartialCabinImagesConnection,
-): Images | undefined {
+type CabinImages = PartialCabinImagesConnection;
+type Reservations = PartialReservationsConnection;
+type Cabins = PartialCabinsConnection;
+
+export function imagesDto(images: CabinImages): Images | undefined {
   return images
     ? images.edges.map((image) => {
         return {
@@ -27,16 +29,24 @@ export function imagesDto(
     : undefined;
 }
 
-export function reservationsDto(reservations: PartialReservationsConnection) {
+export function reservationsDto(reservations: Reservations) {
   return reservations.edges.map((reservation) => {
+    const convertDateRangeString = (dateRangeString: string) => {
+      const [from, to] = dateRangeString.replace(/[[)]/g, '').split(',');
+      return {
+        from: new Date(from),
+        to: new Date(to),
+      };
+    };
+
     return {
       id: reservation.node.id,
-      during: reservation.node.during,
+      during: convertDateRangeString(reservation.node.during),
     };
   });
 }
 
-export function cabinsDto(cabins: PartialCabinsConnection) {
+export function cabinsDto(cabins: Cabins) {
   return cabins.edges.map((cabin) => {
     return {
       id: cabin.node.id,
