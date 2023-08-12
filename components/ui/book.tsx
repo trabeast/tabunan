@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { queryReservationsByCabinId } from '@/api/database';
-import { Reservation } from '@/components/ui/reservation';
+import Reservation from '@/components/ui/reservation';
 import Gallery from '@/components/ui/gallery';
 import { cn } from '@/lib/utils';
 
@@ -39,24 +39,24 @@ export default function Book({
           setReservation({ reservations });
         })()
       : setReservation({ reservations: [] });
-  }, [book]);
+  }, [id, book]);
 
   return (
     <Dialog onOpenChange={() => setBook(false)}>
       <DialogTrigger asChild={true}>{children}</DialogTrigger>
-      <DialogContent className={cn('max-w-[80%]')}>
+      <DialogContent className={cn('max-w-[70%]')}>
         <DialogHeader>
           <DialogTitle>{name}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <div className={'flex flex-row gap-x-5'}>
+        <div className={'flex flex-row space-x-5 divide-x'}>
           <div className={'basis-2/3'}>
             <Gallery images={images} />
           </div>
           <div className={'basis-1/3'}>
-            {reservations?.length! > 0 && (
+            <div className={'mx-5'}>
               <Reservation reservations={reservations} />
-            )}
+            </div>
           </div>
         </div>
       </DialogContent>

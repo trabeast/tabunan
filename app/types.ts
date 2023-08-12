@@ -1,7 +1,4 @@
-export interface DateRange {
-  from: Date;
-  to: Date;
-}
+import { DateRange } from 'react-day-picker';
 
 export type Images =
   | {
