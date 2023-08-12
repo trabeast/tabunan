@@ -1,15 +1,11 @@
 'use client';
 
 import React from 'react';
-import { CabinProps, ReservationProps } from '@/app/types';
+import { ReservationProps } from '@/app/types';
 
-export function Reservation({
-  id,
-  reservations,
-}: Pick<CabinProps, 'id'> & ReservationProps) {
+export function Reservation({ reservations }: ReservationProps) {
   return (
     <>
-      <div>Reservation {id}</div>
       {reservations?.map(({ id, during: { from, to } }) => {
         return (
           <div key={id}>

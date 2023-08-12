@@ -60,7 +60,7 @@ export default function Gallery({ images }: GalleryProps) {
           )}
         </>
       ) : (
-        <i>No images</i>
+        <em>No Images</em>
       )}
     </div>
   );

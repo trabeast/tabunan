@@ -1,10 +1,20 @@
 'use client';
 
-import { CabinProps, GalleryProps } from '@/app/types';
-import { ReactNode, useContext } from 'react';
-import { Button } from '@/components/ui/button';
+import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';
+import { ReactNode, useContext, useEffect, useState } from 'react';
 import { BookContext } from '@/app/contexts';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { queryReservationsByCabinId } from '@/api/database';
+import { Reservation } from '@/components/ui/reservation';
 import Gallery from '@/components/ui/gallery';
+import { cn } from '@/lib/utils';
 
 export default function Book({
   id,
@@ -18,21 +28,38 @@ export default function Book({
   }) {
   const { book, setBook } = useContext(BookContext);
 
+  const [{ reservations }, setReservation] = useState<ReservationProps>({
+    reservations: [],
+  });
+
+  useEffect(() => {
+    book
+      ? (async () => {
+          const { reservations } = await queryReservationsByCabinId(id);
+          setReservation({ reservations });
+        })()
+      : setReservation({ reservations: [] });
+  }, [book]);
+
   return (
-    <dialog className={'z-50 border rounded-md w-[80%] h-[80%]'} open={book}>
-      <article className={'m-5'}>
-        <section>
-          <h3 className={'text-2xl font-semibold'}>{name}</h3>
-          <p className={'text-sm text-muted-foreground'}>{description}</p>
-          <div className={'w-[500px]'}>
+    <Dialog onOpenChange={() => setBook(false)}>
+      <DialogTrigger asChild={true}>{children}</DialogTrigger>
+      <DialogContent className={cn('max-w-[80%]')}>
+        <DialogHeader>
+          <DialogTitle>{name}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+        <div className={'flex flex-row gap-x-5'}>
+          <div className={'basis-2/3'}>
             <Gallery images={images} />
           </div>
-          {children}
-          <footer>
-            <Button onClick={() => setBook(false)}>Close</Button>
-          </footer>
-        </section>
-      </article>
-    </dialog>
+          <div className={'basis-1/3'}>
+            {reservations?.length! > 0 && (
+              <Reservation reservations={reservations} />
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
