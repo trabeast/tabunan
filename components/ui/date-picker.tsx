@@ -14,19 +14,11 @@ import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 
-export default function Reservation({ reservations }: ReservationProps) {
+export default function DatePicker({ reservations }: ReservationProps) {
   const disabledDays = reservations?.map(({ during: { from, to } }) => {
     return { from: from, to: to };
   });
 
-  return (
-    <>
-      <DatePicker disabledDays={disabledDays} />
-    </>
-  );
-}
-
-export function DatePicker({ disabledDays }: { disabledDays?: DateRange[] }) {
   const [date, setDate] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,

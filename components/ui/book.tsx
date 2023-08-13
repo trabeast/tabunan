@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { queryReservationsByCabinId } from '@/api/database';
-import Reservation from '@/components/ui/reservation';
+import DatePicker from '@/components/ui/date-picker';
 import Gallery from '@/components/ui/gallery';
 import { cn } from '@/lib/utils';
 
@@ -55,7 +55,7 @@ export default function Book({
           </div>
           <div className={'basis-1/3'}>
             <div className={'mx-5'}>
-              <Reservation reservations={reservations} />
+              <DatePicker reservations={reservations} />
             </div>
           </div>
         </div>
