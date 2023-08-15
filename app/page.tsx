@@ -1,6 +1,6 @@
 import React from 'react';
-import CabinList from '@/components/ui/cabin-list';
+import CabinList from './components/ui/cabin-list';
 
-export default function Home() {
+export default async function Home() {
   return <CabinList />;
 }

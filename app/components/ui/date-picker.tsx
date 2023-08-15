@@ -1,28 +1,39 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ReservationProps } from '@/app/types';
+import { Popover, PopoverContent, PopoverTrigger } from './popover';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { DateRange } from 'react-day-picker';
+  DateAfter,
+  DateBefore,
+  DateInterval,
+  DateRange,
+} from 'react-day-picker';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
-import { Calendar } from '@/components/ui/calendar';
+import { Calendar } from './calendar';
 import { format } from 'date-fns';
-import { Button } from '@/components/ui/button';
+import { Button } from './button';
 
 export default function DatePicker({ reservations }: ReservationProps) {
-  const disabledDays = reservations?.map(({ during: { from, to } }) => {
-    return { from: from, to: to };
-  });
+  const [range, setRange] = useState<DateRange | undefined>(undefined);
 
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: undefined,
-    to: undefined,
-  });
+  const disabledDays = useMemo(() => {
+    let disabledDays:
+      | (DateRange | DateInterval | DateBefore | DateAfter)[]
+      | undefined;
+
+    if (reservations && reservations.length > 0) {
+      disabledDays = reservations?.map(({ during: { from, to } }) => {
+        return { from: from, to: to };
+      });
+    } else {
+      disabledDays = [];
+    }
+
+    disabledDays.push({ before: new Date() });
+    return disabledDays;
+  }, [reservations]);
 
   const setDatePickerDisplay = (date: DateRange | undefined) => {
     if (date?.from && date.to) {
@@ -47,22 +58,22 @@ export default function DatePicker({ reservations }: ReservationProps) {
             variant={'outline'}
             className={cn(
               'w-[300px] justify-start text-left font-normal',
-              !date && 'text-muted-foreground',
+              !range && 'text-muted-foreground',
             )}
           >
             <CalendarIcon className='mr-2 h-4 w-4' />
-            {setDatePickerDisplay(date)}
+            {setDatePickerDisplay(range)}
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0' align='start'>
           <Calendar
-            initialFocus
+            initialFocus={true}
             mode='range'
-            defaultMonth={date?.from}
-            selected={date}
-            onSelect={setDate}
+            selected={range}
+            onSelect={setRange}
             numberOfMonths={2}
             showOutsideDays={false}
+            limitSelectRangeWithoutDisabledDays={true}
             disabled={disabledDays}
           />
         </PopoverContent>

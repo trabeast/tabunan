@@ -1,8 +1,7 @@
 'use client';
 
-import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';
-import { ReactNode, useContext, useEffect, useState } from 'react';
-import { BookContext } from '@/app/contexts';
+import { CabinProps, GalleryProps } from '@/app/types';
+import { ReactNode } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -10,11 +9,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { queryReservationsByCabinId } from '@/api/database';
-import DatePicker from '@/components/ui/date-picker';
-import Gallery from '@/components/ui/gallery';
+} from './dialog';
+import DatePicker from './date-picker';
+import Gallery from './gallery';
 import { cn } from '@/lib/utils';
+import { useCabinContext } from '@/app/contexts/cabin-context';
 
 export default function Book({
   id,
@@ -26,20 +25,7 @@ export default function Book({
   GalleryProps & {
     children: ReactNode;
   }) {
-  const { book, setBook } = useContext(BookContext);
-
-  const [{ reservations }, setReservation] = useState<ReservationProps>({
-    reservations: [],
-  });
-
-  useEffect(() => {
-    book
-      ? (async () => {
-          const { reservations } = await queryReservationsByCabinId(id);
-          setReservation({ reservations });
-        })()
-      : setReservation({ reservations: [] });
-  }, [id, book]);
+  const { setBook } = useCabinContext();
 
   return (
     <Dialog onOpenChange={() => setBook(false)}>

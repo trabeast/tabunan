@@ -1,3 +1,5 @@
+'use server';
+
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import cabinsQuery from '@/lib/queries/cabins-query';
 import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';
@@ -9,7 +11,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export function queryCabinsWithImages(): Promise<
+export async function queryCabinsWithImages(): Promise<
   (CabinProps & GalleryProps)[]
 > {
   return Promise.resolve(
