@@ -58,7 +58,6 @@ export default function DatePicker({
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            id='date'
             variant={'outline'}
             className={cn(
               'w-[300px] justify-start text-left font-normal',
@@ -77,7 +76,6 @@ export default function DatePicker({
             onSelect={setRange}
             numberOfMonths={2}
             showOutsideDays={false}
-            limitSelectRangeWithoutDisabledDays={true}
             disabled={disabledDays}
           />
         </PopoverContent>
