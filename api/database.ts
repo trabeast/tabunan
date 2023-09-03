@@ -10,7 +10,7 @@ const client = new ApolloClient({
 });
 
 export async function queryCabinsWithImages(): Promise<
-  (CabinProps & GalleryProps)[]
+  (CabinProps & { images: GalleryProps })[]
 > {
   return Promise.resolve(
     client.query({ query: cabinsQuery }).then(({ data }) => {
