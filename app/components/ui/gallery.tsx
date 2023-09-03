@@ -40,7 +40,7 @@ function ChevronButton({ variant }: ChevronButtonProps) {
   );
 }
 
-export default function Gallery({ images }: GalleryProps) {
+export default function Gallery({ images }: { images: GalleryProps }) {
   return (
     <div className={'relative'}>
       {images && images.length > 0 ? (

@@ -1,6 +1,6 @@
 import { DateRange } from 'react-day-picker';
 
-export type Images =
+export type GalleryProps =
   | {
       src: string;
       alt: string;
@@ -10,23 +10,15 @@ export type Images =
     }[]
   | undefined;
 
-export type Reservations =
+export type ReservationProps =
   | {
       id: number;
       during: DateRange;
     }[]
   | undefined;
 
-export interface GalleryProps {
-  images: Images;
-}
-
-export interface ReservationProps {
-  reservations: Reservations;
-}
-
-export interface CabinProps {
+export type CabinProps = {
   id: number;
   name: string;
   description: string;
-}
+};

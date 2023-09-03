@@ -1,5 +1,3 @@
-'use server';
-
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import cabinsQuery from '@/lib/queries/cabins-query';
 import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';
@@ -32,7 +30,7 @@ export function queryReservationsByCabinId(
         fetchPolicy: 'no-cache',
       })
       .then(({ data }) => {
-        return { reservations: reservationsDto(data.reservationsCollection!) };
+        return reservationsDto(data.reservationsCollection!);
       }),
   );
 }

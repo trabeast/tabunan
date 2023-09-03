@@ -15,7 +15,11 @@ import { Calendar } from './calendar';
 import { format } from 'date-fns';
 import { Button } from './button';
 
-export default function DatePicker({ reservations }: ReservationProps) {
+export default function DatePicker({
+  reservations,
+}: {
+  reservations: ReservationProps;
+}) {
   const [range, setRange] = useState<DateRange | undefined>(undefined);
 
   const disabledDays = useMemo(() => {

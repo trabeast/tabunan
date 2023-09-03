@@ -19,8 +19,8 @@ export default function Cabin({
   name,
   description,
   images,
-}: CabinProps & GalleryProps) {
-  const { setBook } = useCabinContext();
+}: CabinProps & { images: GalleryProps }) {
+  const { setCabin } = useCabinContext();
 
   return (
     <Card className={'lg:w-[500px] sm:w-[100%] sm:mx-5'}>
@@ -33,7 +33,9 @@ export default function Cabin({
       </CardHeader>
       <CardFooter>
         <Book id={id} name={name} description={description} images={images}>
-          <Button onClick={() => setBook(true)}>Book</Button>
+          <Button onClick={() => setCabin({ id, name, description })}>
+            Book
+          </Button>
         </Book>
       </CardFooter>
     </Card>

@@ -1,23 +1,31 @@
 'use client';
 
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import { CabinProps } from '@/app/types';
+
+type CabinContextType = {
+  cabin: CabinProps;
+  setCabin: (cabin: CabinProps) => void;
+};
 
 type CabinContextProviderProps = {
   children: ReactNode;
 };
 
-type CabinContextType = {
-  book: boolean;
-  setBook: (book: boolean) => void;
-};
-
-export const CabinContext = createContext<CabinContextType | null>(null);
+export const CabinContext = createContext<CabinContextType | undefined>(
+  undefined,
+);
 
 export default function CabinContextProvider({
   children,
 }: CabinContextProviderProps) {
-  const [book, setBook] = useState<boolean>(false);
-  const cabinContext = useMemo(() => ({ book, setBook }), [book, setBook]);
+  const [cabin, setCabin] = useState({
+    id: -1,
+    name: '',
+    description: '',
+  });
+
+  const cabinContext = useMemo(() => ({ cabin, setCabin }), [cabin]);
 
   return (
     <CabinContext.Provider value={cabinContext}>

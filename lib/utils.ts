@@ -5,7 +5,7 @@ import {
   PartialCabinsConnection,
   PartialReservationsConnection,
 } from '@/lib/queries/types';
-import { Images } from '@/app/types';
+import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -15,7 +15,7 @@ type CabinImages = PartialCabinImagesConnection;
 type Reservations = PartialReservationsConnection;
 type Cabins = PartialCabinsConnection;
 
-export function imagesDto(images: CabinImages): Images | undefined {
+export function imagesDto(images: CabinImages): GalleryProps {
   return images
     ? images.edges.map((image) => {
         return {
@@ -29,7 +29,7 @@ export function imagesDto(images: CabinImages): Images | undefined {
     : undefined;
 }
 
-export function reservationsDto(reservations: Reservations) {
+export function reservationsDto(reservations: Reservations): ReservationProps {
   return reservations.edges.map((reservation) => {
     const convertDateRangeString = (dateRangeString: string) => {
       const [from, to] = dateRangeString.replace(/[[)]/g, '').split(',');
@@ -46,7 +46,11 @@ export function reservationsDto(reservations: Reservations) {
   });
 }
 
-export function cabinsDto(cabins: Cabins) {
+export function cabinsDto(
+  cabins: Cabins,
+): (CabinProps & { images: GalleryProps } & {
+  reservations: ReservationProps;
+})[] {
   return cabins.edges.map((cabin) => {
     return {
       id: cabin.node.id,
