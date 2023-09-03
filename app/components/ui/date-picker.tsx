@@ -8,11 +8,15 @@ import {
   DateBefore,
   DateInterval,
   DateRange,
+  isDateAfterType,
+  isDateBeforeType,
+  isDateInterval,
+  isDateRange,
 } from 'react-day-picker';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from './calendar';
-import { format } from 'date-fns';
+import { format, isAfter, isBefore } from 'date-fns';
 import { Button } from './button';
 
 export default function DatePicker({
@@ -52,6 +56,96 @@ export default function DatePicker({
       return <span>Pick a date</span>;
     }
   };
+  const rangeIncludeDate = (range: DateRange, date: Date): boolean =>
+    Boolean(
+      range.from &&
+        range.to &&
+        isAfter(date, range.from) &&
+        isBefore(date, range.to),
+    );
+
+  const handleSelect = (range: DateRange | undefined, selectedDate: Date) => {
+    setRange(() => {
+      const isIncluded =
+        range &&
+        disabledDays?.some((date) => {
+          if (isDateRange(date)) {
+            return (
+              (date.from && rangeIncludeDate(range, date.from)) ||
+              (date.to && rangeIncludeDate(range, date.to))
+            );
+          } else if (isDateInterval(date)) {
+            return (
+              rangeIncludeDate(range, date.before) ||
+              rangeIncludeDate(range, date.after)
+            );
+          } else if (isDateAfterType(date)) {
+            return rangeIncludeDate(range, date.after);
+          } else if (isDateBeforeType(date)) {
+            return rangeIncludeDate(range, date.before);
+          } else {
+            return rangeIncludeDate(range, date);
+          }
+        });
+
+      const isBeforeSelectedDate =
+        range &&
+        disabledDays?.some((date) => {
+          if (isDateRange(date)) {
+            return (
+              (date.from && isBefore(selectedDate, date.from)) ||
+              (date.to && isBefore(selectedDate, date.to))
+            );
+          } else if (isDateInterval(date)) {
+            return (
+              isBefore(selectedDate, date.before) ||
+              isBefore(selectedDate, date.after)
+            );
+          } else if (isDateAfterType(date)) {
+            return isBefore(selectedDate, date.after);
+          } else if (isDateBeforeType(date)) {
+            return isBefore(selectedDate, date.before);
+          } else {
+            return isBefore(selectedDate, date);
+          }
+        });
+
+      const isAfterSelectedDate =
+        range &&
+        disabledDays?.some((date) => {
+          if (isDateRange(date)) {
+            return (
+              (date.from && isAfter(selectedDate, date.from)) ||
+              (date.to && isAfter(selectedDate, date.to))
+            );
+          } else if (isDateInterval(date)) {
+            return (
+              isAfter(selectedDate, date.before) ||
+              isAfter(selectedDate, date.after)
+            );
+          } else if (isDateAfterType(date)) {
+            return isAfter(selectedDate, date.after);
+          } else if (isDateBeforeType(date)) {
+            return isAfter(selectedDate, date.before);
+          } else {
+            return isAfter(selectedDate, date);
+          }
+        });
+
+      if (isIncluded) {
+        if (range.to && isAfterSelectedDate) {
+          return { from: selectedDate, to: undefined };
+        }
+
+        if (range.from && isBeforeSelectedDate) {
+          return { from: range.from, to: undefined };
+        } else {
+          return { from: range.to, to: undefined };
+        }
+      }
+      return range;
+    });
+  };
 
   return (
     <div className={cn('grid gap-2')}>
@@ -73,7 +167,7 @@ export default function DatePicker({
             initialFocus={true}
             mode='range'
             selected={range}
-            onSelect={setRange}
+            onSelect={handleSelect}
             numberOfMonths={2}
             showOutsideDays={false}
             disabled={disabledDays}
