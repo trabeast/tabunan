@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Card,
   CardContent,
@@ -12,7 +10,7 @@ import Gallery from './gallery';
 import { Button } from './button';
 import { CabinProps, GalleryProps } from '@/app/types';
 import Book from './book';
-import { useCabinContext } from '@/app/contexts/cabin-context';
+import CabinContextProvider from '@/app/contexts/cabin-context';
 
 export default function Cabin({
   id,
@@ -20,24 +18,22 @@ export default function Cabin({
   description,
   images,
 }: CabinProps & { images: GalleryProps }) {
-  const { setCabin } = useCabinContext();
-
   return (
-    <Card className={'lg:w-[500px] sm:w-[100%] sm:mx-5'}>
-      <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-        <CardContent>
-          <Gallery images={images} />
-        </CardContent>
-      </CardHeader>
-      <CardFooter>
-        <Book id={id} name={name} description={description} images={images}>
-          <Button onClick={() => setCabin({ id, name, description })}>
-            Book
-          </Button>
-        </Book>
-      </CardFooter>
-    </Card>
+    <CabinContextProvider>
+      <Card className={'lg:w-[500px] sm:w-[100%] sm:mx-5'}>
+        <CardHeader>
+          <CardTitle>{name}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+          <CardContent>
+            <Gallery images={images} />
+          </CardContent>
+        </CardHeader>
+        <CardFooter>
+          <Book id={id} name={name} description={description} images={images}>
+            <Button>Book</Button>
+          </Book>
+        </CardFooter>
+      </Card>
+    </CabinContextProvider>
   );
 }

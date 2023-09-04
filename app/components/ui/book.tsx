@@ -1,7 +1,6 @@
 'use client';
 
-import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';
-import { ReactNode, useEffect, useState } from 'react';
+import { CabinProps, GalleryProps } from '@/app/types';
 import {
   Dialog,
   DialogContent,
@@ -13,8 +12,8 @@ import {
 import DatePicker from './date-picker';
 import Gallery from './gallery';
 import { cn } from '@/lib/utils';
+import { ReactNode } from 'react';
 import { useCabinContext } from '@/app/contexts/cabin-context';
-import { queryReservationsByCabinId } from '@/api/database';
 
 export default function Book({
   id,
@@ -22,21 +21,12 @@ export default function Book({
   description,
   images,
   children,
-}: CabinProps & { images: GalleryProps } & {
-  children: ReactNode;
-}) {
-  const { cabin } = useCabinContext();
-
-  const [reservations, setReservations] = useState<ReservationProps>([]);
-
-  useEffect(() => {
-    cabin.id === id &&
-      (async () => setReservations(await queryReservationsByCabinId(id)))();
-  }, [cabin]);
-
+}: CabinProps & { images: GalleryProps } & { children: ReactNode }) {
+  const { book, cabin } = useCabinContext();
+  const handleOpen = (isOpen: boolean) => (isOpen ? book(id) : book(undefined));
   return (
-    <Dialog>
-      <DialogTrigger asChild={true}>{children}</DialogTrigger>
+    <Dialog onOpenChange={handleOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className={cn('max-w-[70%]')}>
         <DialogHeader>
           <DialogTitle>{name}</DialogTitle>
@@ -48,7 +38,7 @@ export default function Book({
           </div>
           <div className={'basis-1/3'}>
             <div className={'mx-5'}>
-              <DatePicker reservations={reservations} />
+              <DatePicker reserved={cabin.reservedDates} />
             </div>
           </div>
         </div>

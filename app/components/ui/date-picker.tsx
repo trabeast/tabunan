@@ -20,19 +20,21 @@ import { format, isAfter, isBefore } from 'date-fns';
 import { Button } from './button';
 
 export default function DatePicker({
-  reservations,
+  reserved,
 }: {
-  reservations: ReservationProps;
+  reserved: ReservationProps;
 }) {
-  const [range, setRange] = useState<DateRange | undefined>(undefined);
+  const [reservation, setReservation] = useState<DateRange | undefined>(
+    undefined,
+  );
 
   const disabledDays = useMemo(() => {
     let disabledDays:
       | (DateRange | DateInterval | DateBefore | DateAfter)[]
       | undefined;
 
-    if (reservations && reservations.length > 0) {
-      disabledDays = reservations?.map(({ during: { from, to } }) => {
+    if (reserved && reserved.length > 0) {
+      disabledDays = reserved?.map(({ during: { from, to } }) => {
         return { from: from, to: to };
       });
     } else {
@@ -41,7 +43,7 @@ export default function DatePicker({
 
     disabledDays.push({ before: new Date() });
     return disabledDays;
-  }, [reservations]);
+  }, [reserved]);
 
   const setDatePickerDisplay = (date: DateRange | undefined) => {
     if (date?.from && date.to) {
@@ -56,6 +58,7 @@ export default function DatePicker({
       return <span>Pick a date</span>;
     }
   };
+
   const rangeIncludeDate = (range: DateRange, date: Date): boolean =>
     Boolean(
       range.from &&
@@ -64,80 +67,43 @@ export default function DatePicker({
         isBefore(date, range.to),
     );
 
+  function check<T>(
+    date: T,
+    checker: (date: T, dateToCompare: Date) => boolean,
+  ): boolean {
+    return Boolean(
+      disabledDays?.some((disabledDay) => {
+        if (isDateRange(disabledDay)) {
+          return (
+            (disabledDay.from && checker(date, disabledDay.from)) ||
+            (disabledDay.to && checker(date, disabledDay.to))
+          );
+        } else if (isDateInterval(disabledDay)) {
+          return (
+            checker(date, disabledDay.before) ||
+            checker(date, disabledDay.after)
+          );
+        } else if (isDateAfterType(disabledDay)) {
+          return checker(date, disabledDay.after);
+        } else if (isDateBeforeType(disabledDay)) {
+          return checker(date, disabledDay.before);
+        } else {
+          return false;
+        }
+      }),
+    );
+  }
+
   const handleSelect = (range: DateRange | undefined, selectedDate: Date) => {
-    setRange(() => {
-      const isIncluded =
-        range &&
-        disabledDays?.some((date) => {
-          if (isDateRange(date)) {
-            return (
-              (date.from && rangeIncludeDate(range, date.from)) ||
-              (date.to && rangeIncludeDate(range, date.to))
-            );
-          } else if (isDateInterval(date)) {
-            return (
-              rangeIncludeDate(range, date.before) ||
-              rangeIncludeDate(range, date.after)
-            );
-          } else if (isDateAfterType(date)) {
-            return rangeIncludeDate(range, date.after);
-          } else if (isDateBeforeType(date)) {
-            return rangeIncludeDate(range, date.before);
-          } else {
-            return rangeIncludeDate(range, date);
-          }
-        });
+    setReservation(() => {
+      if (range && check(range, rangeIncludeDate)) {
+        const date = selectedDate;
 
-      const isBeforeSelectedDate =
-        range &&
-        disabledDays?.some((date) => {
-          if (isDateRange(date)) {
-            return (
-              (date.from && isBefore(selectedDate, date.from)) ||
-              (date.to && isBefore(selectedDate, date.to))
-            );
-          } else if (isDateInterval(date)) {
-            return (
-              isBefore(selectedDate, date.before) ||
-              isBefore(selectedDate, date.after)
-            );
-          } else if (isDateAfterType(date)) {
-            return isBefore(selectedDate, date.after);
-          } else if (isDateBeforeType(date)) {
-            return isBefore(selectedDate, date.before);
-          } else {
-            return isBefore(selectedDate, date);
-          }
-        });
-
-      const isAfterSelectedDate =
-        range &&
-        disabledDays?.some((date) => {
-          if (isDateRange(date)) {
-            return (
-              (date.from && isAfter(selectedDate, date.from)) ||
-              (date.to && isAfter(selectedDate, date.to))
-            );
-          } else if (isDateInterval(date)) {
-            return (
-              isAfter(selectedDate, date.before) ||
-              isAfter(selectedDate, date.after)
-            );
-          } else if (isDateAfterType(date)) {
-            return isAfter(selectedDate, date.after);
-          } else if (isDateBeforeType(date)) {
-            return isAfter(selectedDate, date.before);
-          } else {
-            return isAfter(selectedDate, date);
-          }
-        });
-
-      if (isIncluded) {
-        if (range.to && isAfterSelectedDate) {
+        if (range.to && check(date, isAfter)) {
           return { from: selectedDate, to: undefined };
         }
 
-        if (range.from && isBeforeSelectedDate) {
+        if (range.from && check<Date>(date, isBefore)) {
           return { from: range.from, to: undefined };
         } else {
           return { from: range.to, to: undefined };
@@ -155,22 +121,22 @@ export default function DatePicker({
             variant={'outline'}
             className={cn(
               'w-[300px] justify-start text-left font-normal',
-              !range && 'text-muted-foreground',
+              !reservation && 'text-muted-foreground',
             )}
           >
             <CalendarIcon className='mr-2 h-4 w-4' />
-            {setDatePickerDisplay(range)}
+            {setDatePickerDisplay(reservation)}
           </Button>
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0' align='start'>
           <Calendar
             initialFocus={true}
             mode='range'
-            selected={range}
-            onSelect={handleSelect}
+            selected={reservation}
             numberOfMonths={2}
             showOutsideDays={false}
             disabled={disabledDays}
+            onSelect={handleSelect}
           />
         </PopoverContent>
       </Popover>
