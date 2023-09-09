@@ -11,6 +11,7 @@ import { Button } from './button';
 import { CabinProps } from '@/app/types';
 import Book from './book';
 import SelectedCabinContextProvider from '@/hooks/contexts/selected-cabin/selected-cabin-context';
+import ReservationContextProvider from '@/hooks/contexts/reservation/reservation-context';
 
 export default function Cabin({
   id,
@@ -20,20 +21,22 @@ export default function Cabin({
 }: CabinProps & { images: GalleryProps['images'] }) {
   return (
     <SelectedCabinContextProvider>
-      <Card className={'lg:w-[500px] sm:w-[100%] sm:mx-5'}>
-        <CardHeader>
-          <CardTitle>{name}</CardTitle>
-          <CardDescription>{description}</CardDescription>
-          <CardContent>
-            <Gallery images={images} />
-          </CardContent>
-        </CardHeader>
-        <CardFooter>
-          <Book id={id} name={name} description={description} images={images}>
-            <Button>Book</Button>
-          </Book>
-        </CardFooter>
-      </Card>
+      <ReservationContextProvider>
+        <Card className={'lg:w-[500px] sm:w-[100%] sm:mx-5'}>
+          <CardHeader>
+            <CardTitle>{name}</CardTitle>
+            <CardDescription>{description}</CardDescription>
+            <CardContent>
+              <Gallery images={images} />
+            </CardContent>
+          </CardHeader>
+          <CardFooter>
+            <Book id={id} name={name} description={description} images={images}>
+              <Button>Book</Button>
+            </Book>
+          </CardFooter>
+        </Card>
+      </ReservationContextProvider>
     </SelectedCabinContextProvider>
   );
 }

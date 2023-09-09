@@ -1,37 +1,43 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import debug, { displayDateRange } from '@/debug/debug';
-import { DateRange } from 'react-day-picker';
 import { ReservationProps } from '@/app/types';
+import useSelectedCabinState from '@/hooks/contexts/selected-cabin/selected-cabin-state';
+import { queryReservationsByCabinId } from '@/api/database';
 import { DisabledDays } from '@/lib/datepicker-utils';
-import useCabinBeingBookedState, {
-  CabinBeingBooked,
-} from '@/hooks/contexts/selected-cabin/cabin-being-booked-state.value';
-import useReservationState from '@/hooks/contexts/selected-cabin/reservation-state';
-import useSelectCabinEffect from '@/hooks/contexts/selected-cabin/select-cabin-effect';
-import useReservationCabinEffect from '@/hooks/contexts/selected-cabin/reservation-cabin-effect';
-import useDisabledDaysMemo from '@/hooks/contexts/selected-cabin/disabled-days-memo';
 
-export type SelectedCabinContextValue =
-  | {
-      setId: (id: number | undefined) => void;
-      setReservation: (
-        range: DateRange | undefined,
-        selectedDate: Date,
-      ) => void;
-      loading: boolean;
-      disabledDays: DisabledDays;
-    } & CabinBeingBooked;
+export type SelectedCabinBase = {
+  loading: boolean;
+  reservedDates: ReservationProps;
+  disabledDays: DisabledDays;
+};
+export type SelectedCabinContextValue = SelectedCabinBase & {
+  id: number | undefined;
+  getCabinById: (id: number | undefined) => void;
+};
 
 export type BookContextProviderProps = {
   children: ReactNode;
 };
 
+export const SelectedCabinContext = createContext<
+  SelectedCabinContextValue | undefined
+>(undefined);
+
 export function useSelectedCabinContext() {
   const context = useContext(SelectedCabinContext);
   if (!context) {
-    throw new Error('useCabinContext must be used within a CabinContext');
+    throw new Error(
+      'useSelectedCabinContext must be used within a SelectedCabinContextProvider',
+    );
   }
   useSelectedCabinContextDebug(context);
   return context;
@@ -41,21 +47,34 @@ export default function SelectedCabinContextProvider({
   children,
 }: BookContextProviderProps) {
   const [id, setId] = useState<number | undefined>(undefined);
-  const { cabin, loading, setCabin } = useCabinBeingBookedState();
-  const disabledDays = useDisabledDaysMemo(cabin.reservedDates);
-  const { reservation, setReservation } = useReservationState(disabledDays);
-  useSelectCabinEffect(id, setCabin);
-  useReservationCabinEffect(setCabin, reservation);
+  const { reservedDates, loading, disabledDays, setCabin } =
+    useSelectedCabinState();
+
+  useEffect(() => {
+    if (id) {
+      setCabin({ type: 'fetch' });
+      queryReservationsByCabinId(id)
+        .then((reserved: ReservationProps) =>
+          setCabin({ type: 'reserved', reserved }),
+        )
+        .catch((e) => {
+          console.error(e);
+          setCabin({ type: 'error' });
+        });
+    } else {
+      setCabin(undefined);
+    }
+  }, [id, setCabin]);
 
   const context: SelectedCabinContextValue = useMemo(
     () => ({
-      setId,
-      setReservation,
-      ...cabin,
+      id,
+      reservedDates,
       loading,
       disabledDays,
+      getCabinById: setId,
     }),
-    [setReservation, cabin, loading, disabledDays],
+    [id, reservedDates, loading, disabledDays],
   );
 
   return (
@@ -65,10 +84,6 @@ export default function SelectedCabinContextProvider({
   );
 }
 
-export const SelectedCabinContext = createContext<
-  SelectedCabinContextValue | undefined
->(undefined);
-
 function useSelectedCabinContextDebug(
   context: SelectedCabinContextValue | undefined,
 ) {
@@ -76,12 +91,9 @@ function useSelectedCabinContextDebug(
   debug(context?.id, (id: number | undefined) =>
     id ? `cabin: ${id} being booked` : 'no cabin being booked',
   );
-  debug(context?.reservedDates, (reservations: ReservationProps) =>
-    reservations
-      ? reservations.map((reservation) => displayDateRange(reservation.during))
+  debug(context?.reservedDates, (reservedDates: ReservationProps) =>
+    reservedDates
+      ? reservedDates.map((reservation) => displayDateRange(reservation.during))
       : 'no cabin being booked',
-  );
-  debug(context?.reservation, (booking: DateRange | undefined) =>
-    booking ? displayDateRange(booking) : 'no cabin being booked',
   );
 }

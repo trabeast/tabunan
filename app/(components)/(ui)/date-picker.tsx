@@ -9,11 +9,12 @@ import { Button } from './button';
 
 import { setDatePickerDisplay } from '@/lib/datepicker-utils';
 import { useSelectedCabinContext } from '@/hooks/contexts/selected-cabin/selected-cabin-context';
+import { useReservationContext } from '@/hooks/contexts/reservation/reservation-context';
 type DatePickerProps = { className?: string };
 
 export default function DatePicker({ className }: DatePickerProps) {
-  const { reservation, setReservation, disabledDays } =
-    useSelectedCabinContext();
+  const { disabledDays } = useSelectedCabinContext();
+  const { reservation, setReservation } = useReservationContext();
 
   return (
     <div className={cn('grid gap-2', className)}>

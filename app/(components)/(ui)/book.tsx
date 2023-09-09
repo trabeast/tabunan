@@ -11,7 +11,7 @@ import {
 } from './dialog';
 import Gallery, { GalleryProps } from './gallery';
 import { cn } from '@/lib/utils';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import BookForm from '@/components/ui/book-form';
 import { useSelectedCabinContext } from '@/hooks/contexts/selected-cabin/selected-cabin-context';
 
@@ -22,9 +22,12 @@ export default function Book({
   images,
   children,
 }: CabinProps & { images: GalleryProps['images'] } & { children: ReactNode }) {
-  const { setId } = useSelectedCabinContext();
-  const handleOpen = (isOpen: boolean) =>
-    isOpen ? setId(id) : setId(undefined);
+  const { getCabinById } = useSelectedCabinContext();
+  const [, setOpen] = useState(false);
+  const handleOpen = (open: boolean) => {
+    setOpen(open);
+    open ? getCabinById(id) : getCabinById(undefined);
+  };
   return (
     <Dialog onOpenChange={handleOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
