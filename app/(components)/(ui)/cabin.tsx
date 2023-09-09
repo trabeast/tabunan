@@ -10,7 +10,7 @@ import Gallery, { GalleryProps } from './gallery';
 import { Button } from './button';
 import { CabinProps } from '@/app/types';
 import Book from './book';
-import CabinContextProvider from '@/contexts/cabin-context';
+import BookContextProvider from '@/hooks/contexts/book/book-context';
 
 export default function Cabin({
   id,
@@ -19,7 +19,7 @@ export default function Cabin({
   images,
 }: CabinProps & { images: GalleryProps['images'] }) {
   return (
-    <CabinContextProvider>
+    <BookContextProvider>
       <Card className={'lg:w-[500px] sm:w-[100%] sm:mx-5'}>
         <CardHeader>
           <CardTitle>{name}</CardTitle>
@@ -34,6 +34,6 @@ export default function Cabin({
           </Book>
         </CardFooter>
       </Card>
-    </CabinContextProvider>
+    </BookContextProvider>
   );
 }

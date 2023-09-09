@@ -1,16 +1,32 @@
-import { ReservationProps } from '@/app/types';
-import DatePicker from '@/components/ui/date-picker';
+'use client';
+
 import { ReactNode } from 'react';
+import CalendarPicker from '@/components/ui/calendar-picker';
+import { format } from 'date-fns';
+import { useBookContext } from '@/hooks/contexts/book/book-context';
 
-type BookFormProps = {
-  reservedDates: ReservationProps;
-} & { children: ReactNode };
+export default function BookForm({ children }: { children: ReactNode }) {
+  const { reservation } = useBookContext();
 
-export default function BookForm({ reservedDates, children }: BookFormProps) {
+  const formId = 'book-form-id';
+
   return (
-    <form className={'mx-5'}>
+    <form className={'mx-5'} id={formId}>
       <label htmlFor='name'>{children}</label>
-      <DatePicker className={'mt-5'} reserved={reservedDates} />
+      <CalendarPicker>
+        <input
+          id={formId}
+          type='text'
+          onChange={() => console.log('To Changed!')}
+          value={`${displayDate(reservation?.from)} - ${displayDate(
+            reservation?.to,
+          )} `}
+        />
+      </CalendarPicker>
     </form>
   );
+}
+
+function displayDate(date: Date | undefined) {
+  return `${date ? format(date, 'y-MM-dd') : ''}`;
 }
