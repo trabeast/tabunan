@@ -13,7 +13,7 @@ import DatePicker from './date-picker';
 import Gallery from './gallery';
 import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
-import { useCabinContext } from '@/app/contexts/cabin-context';
+import { useCabinContext } from '@/contexts/cabin-context';
 
 export default function Book({
   id,

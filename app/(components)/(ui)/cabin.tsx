@@ -10,7 +10,7 @@ import Gallery from './gallery';
 import { Button } from './button';
 import { CabinProps, GalleryProps } from '@/app/types';
 import Book from './book';
-import CabinContextProvider from '@/app/contexts/cabin-context';
+import CabinContextProvider from '@/contexts/cabin-context';
 
 export default function Cabin({
   id,
