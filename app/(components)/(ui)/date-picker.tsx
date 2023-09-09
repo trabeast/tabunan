@@ -19,31 +19,20 @@ import { Calendar } from './calendar';
 import { format, isAfter, isBefore } from 'date-fns';
 import { Button } from './button';
 
-export default function DatePicker({
-  reserved,
-}: {
+type DatePickerProps = {
+  className: string;
   reserved: ReservationProps;
-}) {
+};
+
+export default function DatePicker({ className, reserved }: DatePickerProps) {
   const [reservation, setReservation] = useState<DateRange | undefined>(
     undefined,
   );
 
-  const disabledDays = useMemo(() => {
-    let disabledDays:
-      | (DateRange | DateInterval | DateBefore | DateAfter)[]
-      | undefined;
-
-    if (reserved && reserved.length > 0) {
-      disabledDays = reserved?.map(({ during: { from, to } }) => {
-        return { from: from, to: to };
-      });
-    } else {
-      disabledDays = [];
-    }
-
-    disabledDays.push({ before: new Date() });
-    return disabledDays;
-  }, [reserved]);
+  const disabledDays = useMemo(
+    () => disabledDaysMemo.apply(reserved),
+    [reserved],
+  );
 
   const setDatePickerDisplay = (date: DateRange | undefined) => {
     if (date?.from && date.to) {
@@ -59,51 +48,19 @@ export default function DatePicker({
     }
   };
 
-  const rangeIncludeDate = (range: DateRange, date: Date): boolean =>
-    Boolean(
-      range.from &&
-        range.to &&
-        isAfter(date, range.from) &&
-        isBefore(date, range.to),
-    );
-
-  function check<T>(
-    date: T,
-    checker: (date: T, dateToCompare: Date) => boolean,
-  ): boolean {
-    return Boolean(
-      disabledDays?.some((disabledDay) => {
-        if (isDateRange(disabledDay)) {
-          return (
-            (disabledDay.from && checker(date, disabledDay.from)) ||
-            (disabledDay.to && checker(date, disabledDay.to))
-          );
-        } else if (isDateInterval(disabledDay)) {
-          return (
-            checker(date, disabledDay.before) ||
-            checker(date, disabledDay.after)
-          );
-        } else if (isDateAfterType(disabledDay)) {
-          return checker(date, disabledDay.after);
-        } else if (isDateBeforeType(disabledDay)) {
-          return checker(date, disabledDay.before);
-        } else {
-          return false;
-        }
-      }),
-    );
-  }
-
   const handleSelect = (range: DateRange | undefined, selectedDate: Date) => {
     setReservation(() => {
-      if (range && check(range, rangeIncludeDate)) {
+      if (
+        range &&
+        checkForDateRange.call(disabledDays, range, rangeIncludeDate)
+      ) {
         const date = selectedDate;
 
-        if (range.to && check(date, isAfter)) {
+        if (range.to && checkForDate.call(disabledDays, date, isAfter)) {
           return { from: selectedDate, to: undefined };
         }
 
-        if (range.from && check<Date>(date, isBefore)) {
+        if (range.from && checkForDate.call(disabledDays, date, isBefore)) {
           return { from: range.from, to: undefined };
         } else {
           return { from: range.to, to: undefined };
@@ -114,7 +71,7 @@ export default function DatePicker({
   };
 
   return (
-    <div className={cn('grid gap-2')}>
+    <div className={cn('grid gap-2', className)}>
       <Popover>
         <PopoverTrigger asChild>
           <Button
@@ -143,3 +100,61 @@ export default function DatePicker({
     </div>
   );
 }
+
+type DisabledDays =
+  | (DateRange | DateInterval | DateBefore | DateAfter)[]
+  | undefined;
+
+function disabledDaysMemo(this: ReservationProps): DisabledDays {
+  let disabledDays: DisabledDays;
+
+  if (this && this.length > 0) {
+    disabledDays = this?.map(({ during: { from, to } }) => {
+      return { from: from, to: to };
+    });
+  } else {
+    disabledDays = [];
+  }
+
+  disabledDays.push({ before: new Date() });
+  return disabledDays;
+}
+
+function rangeIncludeDate(range: DateRange, date: Date): boolean {
+  return Boolean(
+    range.from &&
+      range.to &&
+      isAfter(date, range.from) &&
+      isBefore(date, range.to),
+  );
+}
+
+function check<T>(
+  this: DisabledDays,
+  date: T,
+  checker: (date: T, dateToCompare: Date) => boolean,
+): boolean {
+  return Boolean(
+    this?.some((disabledDay) => {
+      if (isDateRange(disabledDay)) {
+        return (
+          (disabledDay.from && checker(date, disabledDay.from)) ||
+          (disabledDay.to && checker(date, disabledDay.to))
+        );
+      } else if (isDateInterval(disabledDay)) {
+        return (
+          checker(date, disabledDay.before) || checker(date, disabledDay.after)
+        );
+      } else if (isDateAfterType(disabledDay)) {
+        return checker(date, disabledDay.after);
+      } else if (isDateBeforeType(disabledDay)) {
+        return checker(date, disabledDay.before);
+      } else {
+        return false;
+      }
+    }),
+  );
+}
+
+const checkForDateRange = check<DateRange>;
+const checkForDate = check<Date>;
