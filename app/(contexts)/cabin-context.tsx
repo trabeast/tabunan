@@ -13,13 +13,14 @@ import {
 } from 'react';
 import { CabinProps, ReservationProps } from '@/app/types';
 import { queryReservationsByCabinId } from '@/api/database';
+import debug, { displayDateRange } from '@/debug/debug';
 
-type ReservedCabin = Pick<CabinProps, 'id'> & {
+type ReservedCabin = Partial<Pick<CabinProps, 'id'>> & {
   reservedDates: ReservationProps;
 };
 
 const initialState: ReservedCabin = {
-  id: -1,
+  id: undefined,
   reservedDates: undefined,
 };
 
@@ -103,6 +104,15 @@ export default function CabinContextProvider({
 
 export function useCabinContext() {
   const context = useContext(CabinContext);
+
+  debug(
+    context?.cabin.id ?? 'no cabin being booked',
+    (id) => `cabin: ${id} being booked`,
+  );
+  debug(context?.cabin.reservedDates, (reservations) =>
+    reservations?.map((reservation) => displayDateRange(reservation.during)),
+  );
+
   if (!context) {
     throw new Error('useCabinContext must be used within a CabinContext');
   }

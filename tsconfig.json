@@ -26,6 +26,7 @@
       "@/components/ui/*": ["app/(components)/(ui)/*"],
       "@/contexts/*": ["app/(contexts)/*"],
       "@/api/*": ["api/*"],
+      "@/debug/*": ["debug/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
