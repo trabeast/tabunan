@@ -22,8 +22,9 @@ export default function Book({
   images,
   children,
 }: CabinProps & { images: GalleryProps } & { children: ReactNode }) {
-  const { book, cabin } = useCabinContext();
-  const handleOpen = (isOpen: boolean) => (isOpen ? book(id) : book(undefined));
+  const { setId, cabin, loading } = useCabinContext();
+  const handleOpen = (isOpen: boolean) =>
+    isOpen ? setId(id) : setId(undefined);
   return (
     <Dialog onOpenChange={handleOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>

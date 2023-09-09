@@ -2,29 +2,32 @@
 
 import {
   createContext,
+  Dispatch,
   ReactNode,
+  SetStateAction,
   useContext,
+  useEffect,
   useMemo,
   useReducer,
+  useState,
 } from 'react';
 import { CabinProps, ReservationProps } from '@/app/types';
 import { queryReservationsByCabinId } from '@/api/database';
 
-type ReservingCabin = Pick<CabinProps, 'id'> & {
+type ReservedCabin = Pick<CabinProps, 'id'> & {
   reservedDates: ReservationProps;
-  loading: boolean;
 };
 
-const initialState: ReservingCabin = {
+const initialState: ReservedCabin = {
   id: -1,
   reservedDates: undefined,
-  loading: false,
 };
 
 type CabinContextType =
   | {
-      book: (id?: number) => void;
-      cabin: ReservingCabin;
+      setId: Dispatch<SetStateAction<number | undefined>>;
+      cabin: ReservedCabin;
+      loading: boolean;
     }
   | undefined;
 
@@ -40,21 +43,27 @@ type ActionType =
   | { type: 'error'; id: number }
   | undefined;
 
-function reducer(state: ReservingCabin, action: ActionType): ReservingCabin {
+function reducer(
+  this: Dispatch<SetStateAction<boolean>>,
+  state: ReservedCabin,
+  action: ActionType,
+): ReservedCabin {
   switch (action?.type) {
     case 'fetch':
+      this(true);
       return {
         ...state,
         id: action.id,
-        loading: true,
       };
     case 'data':
+      this(false);
       return {
         ...state,
         id: action.id,
         reservedDates: action.reserved,
       };
     case 'error':
+      this(false);
       return {
         ...state,
         id: action.id,
@@ -67,9 +76,11 @@ function reducer(state: ReservingCabin, action: ActionType): ReservingCabin {
 export default function CabinContextProvider({
   children,
 }: CabinContextProviderProps) {
-  const [cabin, dispatch] = useReducer(reducer, initialState);
+  const [id, setId] = useState<number | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [cabin, dispatch] = useReducer(reducer.bind(setLoading), initialState);
 
-  const book = (id?: number) => {
+  useEffect(() => {
     if (id) {
       dispatch({ type: 'fetch', id });
       queryReservationsByCabinId(id)
@@ -81,9 +92,9 @@ export default function CabinContextProvider({
     } else {
       dispatch(undefined);
     }
-  };
+  }, [id]);
 
-  const context = useMemo(() => ({ book, cabin }), [cabin]);
+  const context = useMemo(() => ({ setId, cabin, loading }), [cabin, loading]);
 
   return (
     <CabinContext.Provider value={context}>{children}</CabinContext.Provider>
