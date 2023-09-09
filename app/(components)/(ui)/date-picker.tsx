@@ -8,11 +8,12 @@ import { Calendar } from './calendar';
 import { Button } from './button';
 
 import { setDatePickerDisplay } from '@/lib/datepicker-utils';
-import { useBookContext } from '@/hooks/contexts/book/book-context';
+import { useSelectedCabinContext } from '@/hooks/contexts/selected-cabin/selected-cabin-context';
 type DatePickerProps = { className?: string };
 
 export default function DatePicker({ className }: DatePickerProps) {
-  const { reservation, setReservation, disabledDays } = useBookContext();
+  const { reservation, setReservation, disabledDays } =
+    useSelectedCabinContext();
 
   return (
     <div className={cn('grid gap-2', className)}>

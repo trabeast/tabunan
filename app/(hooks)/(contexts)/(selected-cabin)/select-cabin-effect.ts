@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { queryReservationsByCabinId } from '@/api/database';
 import { ReservationProps } from '@/app/types';
-import { ActionType } from '@/hooks/contexts/book/cabin-being-booked-state.value';
+import { ActionType } from '@/hooks/contexts/selected-cabin/cabin-being-booked-state.value';
 
 export default function useSelectCabinEffect(
   id: number | undefined,

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { ActionType } from '@/hooks/contexts/book/cabin-being-booked-state.value';
 import { DateRange } from 'react-day-picker';
+import { ActionType } from '@/hooks/contexts/selected-cabin/cabin-being-booked-state.value';
 
 export default function useReservationCabinEffect(
   setCabin: (action: ActionType) => void,

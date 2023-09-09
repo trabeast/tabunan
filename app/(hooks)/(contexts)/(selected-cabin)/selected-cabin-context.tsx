@@ -3,17 +3,17 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 import debug, { displayDateRange } from '@/debug/debug';
 import { DateRange } from 'react-day-picker';
-import useDisabledDaysMemo from '@/hooks/contexts/book/disabled-days-memo';
 import { ReservationProps } from '@/app/types';
 import { DisabledDays } from '@/lib/datepicker-utils';
 import useCabinBeingBookedState, {
   CabinBeingBooked,
-} from '@/hooks/contexts/book/cabin-being-booked-state.value';
-import useSelectCabinEffect from '@/hooks/contexts/book/select-cabin-effect';
-import useReservationState from '@/hooks/contexts/book/reservation-state';
-import useReservationCabinEffect from '@/hooks/contexts/book/reservation-cabin-effect';
+} from '@/hooks/contexts/selected-cabin/cabin-being-booked-state.value';
+import useReservationState from '@/hooks/contexts/selected-cabin/reservation-state';
+import useSelectCabinEffect from '@/hooks/contexts/selected-cabin/select-cabin-effect';
+import useReservationCabinEffect from '@/hooks/contexts/selected-cabin/reservation-cabin-effect';
+import useDisabledDaysMemo from '@/hooks/contexts/selected-cabin/disabled-days-memo';
 
-export type BookContextValue =
+export type SelectedCabinContextValue =
   | {
       setId: (id: number | undefined) => void;
       setReservation: (
@@ -28,16 +28,16 @@ export type BookContextProviderProps = {
   children: ReactNode;
 };
 
-export function useBookContext() {
-  const context = useContext(BookContext);
+export function useSelectedCabinContext() {
+  const context = useContext(SelectedCabinContext);
   if (!context) {
     throw new Error('useCabinContext must be used within a CabinContext');
   }
-  useBookContextDebug(context);
+  useSelectedCabinContextDebug(context);
   return context;
 }
 
-export default function BookContextProvider({
+export default function SelectedCabinContextProvider({
   children,
 }: BookContextProviderProps) {
   const [id, setId] = useState<number | undefined>(undefined);
@@ -47,7 +47,7 @@ export default function BookContextProvider({
   useSelectCabinEffect(id, setCabin);
   useReservationCabinEffect(setCabin, reservation);
 
-  const context: BookContextValue = useMemo(
+  const context: SelectedCabinContextValue = useMemo(
     () => ({
       setId,
       setReservation,
@@ -59,15 +59,20 @@ export default function BookContextProvider({
   );
 
   return (
-    <BookContext.Provider value={context}>{children}</BookContext.Provider>
+    <SelectedCabinContext.Provider value={context}>
+      {children}
+    </SelectedCabinContext.Provider>
   );
 }
 
-export const BookContext = createContext<BookContextValue | undefined>(
-  undefined,
-);
+export const SelectedCabinContext = createContext<
+  SelectedCabinContextValue | undefined
+>(undefined);
 
-function useBookContextDebug(context: BookContextValue | undefined) {
+function useSelectedCabinContextDebug(
+  context: SelectedCabinContextValue | undefined,
+) {
+  debug(context?.loading ? 'is loading' : 'is not loading');
   debug(context?.id, (id: number | undefined) =>
     id ? `cabin: ${id} being booked` : 'no cabin being booked',
   );

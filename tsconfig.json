@@ -24,7 +24,7 @@
       "@/app/*": ["app/*"],
       "@/lib/*": ["lib/*"],
       "@/components/ui/*": ["app/(components)/(ui)/*"],
-      "@/hooks/contexts/book/*": ["app/(hooks)/(contexts)/(book)/*"],
+      "@/hooks/contexts/selected-cabin/*": ["app/(hooks)/(contexts)/(selected-cabin)/*"],
       "@/api/*": ["api/*"],
       "@/debug/*": ["debug/*"]
     }

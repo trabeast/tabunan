@@ -3,12 +3,7 @@ import { ReservationProps } from '@/app/types';
 import { DisabledDays } from '@/lib/datepicker-utils';
 
 export default function useDisabledDaysMemo(reserved: ReservationProps) {
-  const disabledDays = useMemo(
-    () => disabledDaysMemo.apply(reserved),
-    [reserved],
-  );
-
-  return disabledDays;
+  return useMemo(() => disabledDaysMemo.apply(reserved), [reserved]);
 }
 
 function disabledDaysMemo(this: ReservationProps): DisabledDays {

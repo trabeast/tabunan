@@ -3,10 +3,10 @@
 import { ReactNode } from 'react';
 import CalendarPicker from '@/components/ui/calendar-picker';
 import { format } from 'date-fns';
-import { useBookContext } from '@/hooks/contexts/book/book-context';
+import { useSelectedCabinContext } from '@/hooks/contexts/selected-cabin/selected-cabin-context';
 
 export default function BookForm({ children }: { children: ReactNode }) {
-  const { reservation } = useBookContext();
+  const { reservation } = useSelectedCabinContext();
 
   const formId = 'book-form-id';
 

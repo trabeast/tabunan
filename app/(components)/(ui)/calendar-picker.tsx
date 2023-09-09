@@ -2,7 +2,7 @@
 
 import { Calendar } from '@/components/ui/calendar';
 import { ReactNode } from 'react';
-import { useBookContext } from '@/hooks/contexts/book/book-context';
+import { useSelectedCabinContext } from '@/hooks/contexts/selected-cabin/selected-cabin-context';
 
 type CalendarPickerProps = { className?: string } & { children: ReactNode };
 
@@ -10,7 +10,8 @@ export default function CalendarPicker({
   className,
   children,
 }: CalendarPickerProps) {
-  const { reservation, setReservation, disabledDays } = useBookContext();
+  const { reservation, setReservation, disabledDays } =
+    useSelectedCabinContext();
 
   return (
     <Calendar
@@ -18,7 +19,7 @@ export default function CalendarPicker({
       initialFocus={true}
       mode={'range'}
       selected={reservation}
-      numberOfMonths={2}
+      numberOfMonths={1}
       showOutsideDays={false}
       disabled={disabledDays}
       onSelect={setReservation}

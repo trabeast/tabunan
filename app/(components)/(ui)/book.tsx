@@ -13,7 +13,7 @@ import Gallery, { GalleryProps } from './gallery';
 import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
 import BookForm from '@/components/ui/book-form';
-import { useBookContext } from '@/hooks/contexts/book/book-context';
+import { useSelectedCabinContext } from '@/hooks/contexts/selected-cabin/selected-cabin-context';
 
 export default function Book({
   id,
@@ -22,7 +22,7 @@ export default function Book({
   images,
   children,
 }: CabinProps & { images: GalleryProps['images'] } & { children: ReactNode }) {
-  const { setId } = useBookContext();
+  const { setId } = useSelectedCabinContext();
   const handleOpen = (isOpen: boolean) =>
     isOpen ? setId(id) : setId(undefined);
   return (
