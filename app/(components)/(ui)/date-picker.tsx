@@ -34,20 +34,6 @@ export default function DatePicker({ className, reserved }: DatePickerProps) {
     [reserved],
   );
 
-  const setDatePickerDisplay = (date: DateRange | undefined) => {
-    if (date?.from && date.to) {
-      return (
-        <>
-          {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
-        </>
-      );
-    } else if (date?.from) {
-      return format(date.from, 'LLL dd, y');
-    } else {
-      return <span>Pick a date</span>;
-    }
-  };
-
   const handleSelect = (range: DateRange | undefined, selectedDate: Date) => {
     setReservation(() => {
       if (
@@ -158,3 +144,17 @@ function check<T>(
 
 const checkForDateRange = check<DateRange>;
 const checkForDate = check<Date>;
+
+function setDatePickerDisplay(date: DateRange | undefined) {
+  if (date?.from && date.to) {
+    return (
+      <>
+        {format(date.from, 'LLL dd, y')} - {format(date.to, 'LLL dd, y')}
+      </>
+    );
+  } else if (date?.from) {
+    return format(date.from, 'LLL dd, y');
+  } else {
+    return <span>Pick a date</span>;
+  }
+}

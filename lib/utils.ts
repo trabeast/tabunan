@@ -5,7 +5,8 @@ import {
   PartialCabinsConnection,
   PartialReservationsConnection,
 } from '@/lib/queries/types';
-import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';
+import { CabinProps, ReservationProps } from '@/app/types';
+import { GalleryProps } from '@/components/ui/gallery';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -15,7 +16,7 @@ type CabinImages = PartialCabinImagesConnection;
 type Reservations = PartialReservationsConnection;
 type Cabins = PartialCabinsConnection;
 
-export function imagesDto(images: CabinImages): GalleryProps {
+export function imagesDto(images: CabinImages): GalleryProps['images'] {
   return images
     ? images.edges.map((image) => {
         return {
@@ -46,9 +47,9 @@ export function reservationsDto(reservations: Reservations): ReservationProps {
   });
 }
 
-export function cabinsDto(
-  cabins: Cabins,
-): (CabinProps & { images: GalleryProps } & {
+export function cabinsDto(cabins: Cabins): (CabinProps & {
+  images: GalleryProps['images'];
+} & {
   reservations: ReservationProps;
 })[] {
   return cabins.edges.map((cabin) => {

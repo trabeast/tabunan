@@ -3,9 +3,8 @@ import Image from 'next/image';
 import { Button } from './button';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { cva, VariantProps } from 'class-variance-authority';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { GalleryProps } from '@/app/types';
 
 const buttonVariants = cva('absolute z-10 top-1/2', {
   variants: {
@@ -40,9 +39,23 @@ function ChevronButton({ variant }: ChevronButtonProps) {
   );
 }
 
-export default function Gallery({ images }: { images: GalleryProps }) {
+type ImageProps = {
+  src: string;
+  alt: string;
+  width: number;
+  id: number;
+  height: number;
+};
+
+export type GalleryProps = {
+  images: ImageProps[] | undefined;
+  children?: ReactNode;
+};
+
+export default function Gallery({ images, children }: GalleryProps) {
   return (
     <div className={'relative'}>
+      <div className={'mb-5'}>{children}</div>
       {images && images.length > 0 ? (
         <>
           {images.map((image) => {

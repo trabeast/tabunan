@@ -6,9 +6,9 @@ import {
   CardHeader,
   CardTitle,
 } from './card';
-import Gallery from './gallery';
+import Gallery, { GalleryProps } from './gallery';
 import { Button } from './button';
-import { CabinProps, GalleryProps } from '@/app/types';
+import { CabinProps } from '@/app/types';
 import Book from './book';
 import CabinContextProvider from '@/contexts/cabin-context';
 
@@ -17,7 +17,7 @@ export default function Cabin({
   name,
   description,
   images,
-}: CabinProps & { images: GalleryProps }) {
+}: CabinProps & { images: GalleryProps['images'] }) {
   return (
     <CabinContextProvider>
       <Card className={'lg:w-[500px] sm:w-[100%] sm:mx-5'}>

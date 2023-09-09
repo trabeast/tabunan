@@ -1,8 +1,9 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import cabinsQuery from '@/lib/queries/cabins-query';
-import { CabinProps, GalleryProps, ReservationProps } from '@/app/types';
+import { CabinProps, ReservationProps } from '@/app/types';
 import { cabinsDto, reservationsDto } from '@/lib/utils';
 import reservationQuery from '@/lib/queries/reservation-query';
+import { GalleryProps } from '@/components/ui/gallery';
 
 const client = new ApolloClient({
   uri: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/graphql/v1?apikey=${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
@@ -10,7 +11,7 @@ const client = new ApolloClient({
 });
 
 export async function queryCabinsWithImages(): Promise<
-  (CabinProps & { images: GalleryProps })[]
+  (CabinProps & { images: GalleryProps['images'] })[]
 > {
   return Promise.resolve(
     client.query({ query: cabinsQuery }).then(({ data }) => {

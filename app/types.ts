@@ -1,15 +1,5 @@
 import { DateRange } from 'react-day-picker';
 
-export type GalleryProps =
-  | {
-      src: string;
-      alt: string;
-      width: number;
-      id: number;
-      height: number;
-    }[]
-  | undefined;
-
 export type ReservationProps =
   | {
       id: number;
