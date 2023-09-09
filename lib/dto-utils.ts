@@ -4,7 +4,8 @@ import {
   PartialReservationsConnection,
 } from '@/lib/queries/types';
 import { GalleryProps } from '@/components/ui/gallery';
-import { CabinProps, ReservationProps } from '@/app/types';
+import { ReservationProps } from '@/app/types';
+import { CabinProps } from '@/components/ui/cabin';
 
 type CabinImages = PartialCabinImagesConnection;
 type Reservations = PartialReservationsConnection;
@@ -24,7 +25,9 @@ export function imagesDto(images: CabinImages): GalleryProps['images'] {
     : undefined;
 }
 
-export function reservationsDto(reservations: Reservations): ReservationProps {
+export function reservationsDto(
+  reservations: Reservations,
+): ReservationProps[] | undefined {
   return reservations.edges.map((reservation) => {
     const convertDateRangeString = (dateRangeString: string) => {
       const [from, to] = dateRangeString.replace(/[[)]/g, '').split(',');
@@ -44,7 +47,7 @@ export function reservationsDto(reservations: Reservations): ReservationProps {
 export function cabinsDto(cabins: Cabins): (CabinProps & {
   images: GalleryProps['images'];
 } & {
-  reservations: ReservationProps;
+  reservations: ReservationProps[] | undefined;
 })[] {
   return cabins.edges.map((cabin) => {
     return {

@@ -1,6 +1,5 @@
 'use client';
 
-import { CabinProps } from '@/app/types';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { ReactNode, useState } from 'react';
 import BookForm from '@/components/ui/book-form';
 import { useSelectedCabinContext } from '@/hooks/contexts/selected-cabin/selected-cabin-context';
+import { CabinProps } from '@/components/ui/cabin';
 
 export default function Book({
   id,

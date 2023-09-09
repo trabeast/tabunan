@@ -26,15 +26,15 @@ export default function useSelectedCabinState(): SelectedCabinStateValue {
 
 export type ActionType =
   | { type: 'fetch' }
-  | { type: 'reserved'; reserved: ReservationProps }
+  | { type: 'reserved'; reserved: ReservationProps[] | undefined }
   | { type: 'error' }
   | undefined;
 
 function reducer(
   this: Dispatch<SetStateAction<boolean>>,
-  state: ReservationProps,
+  state: ReservationProps[] | undefined,
   action: ActionType,
-): ReservationProps {
+): ReservationProps[] | undefined {
   switch (action?.type) {
     case 'fetch':
       this(true);

@@ -8,10 +8,15 @@ import {
 } from './card';
 import Gallery, { GalleryProps } from './gallery';
 import { Button } from './button';
-import { CabinProps } from '@/app/types';
 import Book from './book';
 import SelectedCabinContextProvider from '@/hooks/contexts/selected-cabin/selected-cabin-context';
 import ReservationContextProvider from '@/hooks/contexts/reservation/reservation-context';
+
+export type CabinProps = {
+  id: number;
+  name: string;
+  description: string;
+};
 
 export default function Cabin({
   id,

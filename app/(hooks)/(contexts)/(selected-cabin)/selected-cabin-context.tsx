@@ -16,7 +16,7 @@ import { DisabledDays } from '@/lib/datepicker-utils';
 
 export type SelectedCabinBase = {
   loading: boolean;
-  reservedDates: ReservationProps;
+  reservedDates: ReservationProps[] | undefined;
   disabledDays: DisabledDays;
 };
 export type SelectedCabinContextValue = SelectedCabinBase & {
@@ -54,7 +54,7 @@ export default function SelectedCabinContextProvider({
     if (id) {
       setCabin({ type: 'fetch' });
       queryReservationsByCabinId(id)
-        .then((reserved: ReservationProps) =>
+        .then((reserved: ReservationProps[] | undefined) =>
           setCabin({ type: 'reserved', reserved }),
         )
         .catch((e) => {
@@ -91,9 +91,13 @@ function useSelectedCabinContextDebug(
   debug(context?.id, (id: number | undefined) =>
     id ? `cabin: ${id} being booked` : 'no cabin being booked',
   );
-  debug(context?.reservedDates, (reservedDates: ReservationProps) =>
-    reservedDates
-      ? reservedDates.map((reservation) => displayDateRange(reservation.during))
-      : 'no cabin being booked',
+  debug(
+    context?.reservedDates,
+    (reservedDates: ReservationProps[] | undefined) =>
+      reservedDates
+        ? reservedDates.map((reservation) =>
+            displayDateRange(reservation.during),
+          )
+        : 'no cabin being booked',
   );
 }
