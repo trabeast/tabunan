@@ -1,49 +1,60 @@
-import { Dispatch, SetStateAction, useReducer, useState } from 'react';
+import { Dispatch, useReducer } from 'react';
 import { ReservationProps } from '@/app/types';
 import useDisabledDaysMemo from '@/hooks/contexts/selected-cabin/disabled-days-memo';
+import { DisabledDays } from '@/lib/datepicker-utils';
 
-import { SelectedCabinBase } from '@/hooks/contexts/selected-cabin/selected-cabin-context';
-
-export type SelectedCabinStateValue = SelectedCabinBase & {
+export type SelectedCabinStateValue = {
+  id: number | undefined;
+  loading: boolean;
+  reservedDates: ReservationProps[] | undefined;
+  disabledDays: DisabledDays;
   setCabin: Dispatch<ActionType>;
 };
 
 export default function useSelectedCabinState(): SelectedCabinStateValue {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [reservedDates, dispatch] = useReducer(
-    reducer.bind(setLoading),
-    undefined,
-  );
-  const disabledDays = useDisabledDaysMemo(reservedDates);
+  const [state, dispatch] = useReducer(reducer, undefined);
+  const { id, reserved, loading } = state ?? {};
+  const disabledDays = useDisabledDaysMemo(reserved);
 
   return {
-    loading,
-    reservedDates,
+    id,
+    loading: loading ?? false,
+    reservedDates: reserved,
     disabledDays,
     setCabin: dispatch,
   };
 }
 
 export type ActionType =
-  | { type: 'fetch' }
+  | { type: 'fetch'; id: number | undefined }
   | { type: 'reserved'; reserved: ReservationProps[] | undefined }
   | { type: 'error' }
   | undefined;
 
+export type SelectedCabinReducerStateValue = {
+  id: number | undefined;
+  reserved: ReservationProps[] | undefined;
+  loading: boolean;
+};
+
 function reducer(
-  this: Dispatch<SetStateAction<boolean>>,
-  state: ReservationProps[] | undefined,
+  state: SelectedCabinReducerStateValue | undefined,
   action: ActionType,
-): ReservationProps[] | undefined {
+): SelectedCabinReducerStateValue | undefined {
   switch (action?.type) {
     case 'fetch':
-      this(true);
-      return state;
+      return {
+        loading: true,
+        id: action.id,
+        reserved: undefined,
+      };
     case 'reserved':
-      this(false);
-      return action.reserved;
+      return {
+        loading: false,
+        id: state?.id,
+        reserved: action.reserved,
+      };
     case 'error':
-      this(false);
       return state;
     default:
       return undefined;

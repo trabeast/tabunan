@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Fragment, ReactNode, useMemo, useState } from 'react';
+import React, { Fragment, ReactNode, useMemo } from 'react';
 import CalendarPicker from '@/components/ui/calendar-picker';
 import { format } from 'date-fns';
 import { z } from 'zod';
@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { DateRange } from 'react-day-picker';
 import { Button } from '@/components/ui/button';
+import { useReservationContext } from '@/hooks/contexts/reservation/reservation-context';
 
 const formSchema = z.object({
   lastName: z.string(),
@@ -29,9 +30,7 @@ function onSubmit(values: z.infer<typeof formSchema>) {
 }
 
 export default function BookForm({ children }: { children: ReactNode }) {
-  const [reservation, setReservation] = useState<DateRange | undefined>(
-    undefined,
-  );
+  const { reservation } = useReservationContext();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,7 +53,7 @@ export default function BookForm({ children }: { children: ReactNode }) {
       <Form {...form}>
         <form className={'mt-5'} onSubmit={form.handleSubmit(onSubmit)}>
           <div className={'grid grid-cols-2 gap-10'}>
-            <CalendarPicker onChange={setReservation}>
+            <CalendarPicker>
               <Input
                 className={'mt-5 disabled:opacity-100 disabled:cursor-default'}
                 placeholder={'Select Dates'}

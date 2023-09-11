@@ -3,10 +3,9 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
-  useEffect,
   useMemo,
-  useState,
 } from 'react';
 import debug, { displayDateRange } from '@/debug/debug';
 import { ReservationProps } from '@/app/types';
@@ -14,14 +13,12 @@ import useSelectedCabinState from '@/hooks/contexts/selected-cabin/selected-cabi
 import { queryReservationsByCabinId } from '@/api/database';
 import { DisabledDays } from '@/lib/datepicker-utils';
 
-export type SelectedCabinBase = {
+export type SelectedCabinContextValue = {
+  id: number | undefined;
+  getCabinById: (id: number | undefined) => void;
   loading: boolean;
   reservedDates: ReservationProps[] | undefined;
   disabledDays: DisabledDays;
-};
-export type SelectedCabinContextValue = SelectedCabinBase & {
-  id: number | undefined;
-  getCabinById: (id: number | undefined) => void;
 };
 
 export type BookContextProviderProps = {
@@ -32,8 +29,10 @@ export const SelectedCabinContext = createContext<
   SelectedCabinContextValue | undefined
 >(undefined);
 
-export function useSelectedCabinContext() {
-  const context = useContext(SelectedCabinContext);
+export function useSelectedCabinContext(): SelectedCabinContextValue {
+  const context = useContext<SelectedCabinContextValue | undefined>(
+    SelectedCabinContext,
+  );
   if (!context) {
     throw new Error(
       'useSelectedCabinContext must be used within a SelectedCabinContextProvider',
@@ -46,25 +45,27 @@ export function useSelectedCabinContext() {
 export default function SelectedCabinContextProvider({
   children,
 }: BookContextProviderProps) {
-  const [id, setId] = useState<number | undefined>(undefined);
-  const { reservedDates, loading, disabledDays, setCabin } =
+  const { id, reservedDates, loading, disabledDays, setCabin } =
     useSelectedCabinState();
 
-  useEffect(() => {
-    if (id) {
-      setCabin({ type: 'fetch' });
-      queryReservationsByCabinId(id)
-        .then((reserved: ReservationProps[] | undefined) =>
-          setCabin({ type: 'reserved', reserved }),
-        )
-        .catch((e) => {
-          console.error(e);
-          setCabin({ type: 'error' });
-        });
-    } else {
-      setCabin(undefined);
-    }
-  }, [id, setCabin]);
+  const getCabinById = useCallback(
+    (id: number | undefined) => {
+      if (id) {
+        setCabin({ type: 'fetch', id: id });
+        queryReservationsByCabinId(id)
+          .then((reserved: ReservationProps[] | undefined) =>
+            setCabin({ type: 'reserved', reserved }),
+          )
+          .catch((e) => {
+            console.error(e);
+            setCabin({ type: 'error' });
+          });
+      } else {
+        setCabin(undefined);
+      }
+    },
+    [setCabin],
+  );
 
   const context: SelectedCabinContextValue = useMemo(
     () => ({
@@ -72,9 +73,9 @@ export default function SelectedCabinContextProvider({
       reservedDates,
       loading,
       disabledDays,
-      getCabinById: setId,
+      getCabinById,
     }),
-    [id, reservedDates, loading, disabledDays],
+    [id, reservedDates, loading, disabledDays, getCabinById],
   );
 
   return (

@@ -7,13 +7,11 @@ import { useReservationContext } from '@/hooks/contexts/reservation/reservation-
 import { DateRange } from 'react-day-picker';
 
 type CalendarPickerProps = {
-  onChange?: (range: DateRange | undefined) => void;
   className?: string;
   children?: ReactNode;
 };
 
 export default function CalendarPicker({
-  onChange,
   className,
   children,
 }: CalendarPickerProps) {
@@ -22,9 +20,6 @@ export default function CalendarPicker({
 
   function handleSelect(range: DateRange | undefined, selectedDate: Date) {
     setReservation(range, selectedDate);
-    if (onChange) {
-      onChange(range);
-    }
   }
 
   return (
